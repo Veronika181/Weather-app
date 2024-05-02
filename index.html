@@ -1,34 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Viewport meta tag for responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App - Easy Tutorials</title>
+    <!-- Title of the page -->
+    <title>Weather App</title>
+    <!-- Link to external CSS file for styling -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- Main container for the weather card -->
 <div class="card">
+    <!-- Search field for entering the city -->
     <div class="search">
         <input type="text" placeholder="enter city name" spellcheck="false">
         <button><img src="images/search.png"></button>
     </div>
+    <!-- Error message for invalid city -->
     <div class="error">
         <p>Invalid city name</p>
     </div>
+    <!-- Container for displaying weather -->
     <div class="weather">
+        <!-- Weather icon -->
         <img src="images/rain.png" class="weather-icon">
+        <!-- Temperature -->
         <h1 class="temp">22°C</h1>
+        <!-- City name -->
         <h2 class="city">New York</h2>
+        <!-- Weather details (humidity, wind speed) -->
         <div class="details">
             <div class="col">
+                <!-- Humidity icon -->
                 <img src="images/humidity.png">
+                <!-- Text description of humidity -->
                 <div>
                     <p class="humidity">50%</p>
                     <p>Humidity</p>
                 </div>
             </div>
             <div class="col">
+                <!-- Wind speed icon -->
                 <img src="images/wind.png">
+                <!-- Text description of wind speed -->
                 <div>
                     <p class="wind">15 km/h</p>
                     <p>Wind speed</p>
@@ -39,20 +54,27 @@
 </div>    
 
 <script>
+// API key for OpenWeatherMap API
 const apiKey = "39d5056705e03141a4d5b8fc6f2c539c";
+// URL for calling OpenWeatherMap API
 const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
 
+// Selectors for HTML elements
 const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const weatherIcon = document.querySelector(".weather-icon");
 
+// Asynchronous function for getting and displaying weather based on city
 async function checkWeather(city){
+    // Asynchronous API call using fetch
     const response = await fetch(`${apiUrl}${city}&appid=${apiKey}`);
    
+    // If city is invalid (404 error), display error message
     if(response.status == 404){
         document.querySelector(".error").style.display = "block";
         document.querySelector(".weather").style.display = "none";
     }else{
+        // Process API response and update weather display
         var data = await response.json();
 
         document.querySelector(".city").innerHTML = data.name;
@@ -60,6 +82,7 @@ async function checkWeather(city){
         document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
         document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
 
+        // Display weather icon based on main weather condition
         if(data.weather[0].main == "Clouds"){
             weatherIcon.src = "images/clouds.png";
         }
@@ -76,11 +99,13 @@ async function checkWeather(city){
             weatherIcon.src = "images/mist.png";
         }
 
+        // Display weather container and hide error message
         document.querySelector(".weather").style.display = "block";
         document.querySelector(".error").style.display = "none";  
     }
 }
 
+// Add event listener to button for weather search
 searchBtn.addEventListener("click", ()=>{
     checkWeather(searchBox.value);
 });
